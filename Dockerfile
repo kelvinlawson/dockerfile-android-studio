@@ -25,6 +25,10 @@ FROM ubuntu:14.10
 #
 # Notes: To run under some Window Managers (e.g. awesomewm) run
 # "wmname LG3D" on the host OS first.
+#
+# USB device debugging:
+#  Change the device ID in 51-android.rules.
+#  Add "--privileged -v /dev/bus/usb:/dev/bus/usb" to the startup cmdline
 
 RUN apt-get update
 
@@ -44,7 +48,7 @@ RUN apt-get install -y git vim ant
 # Clean up
 RUN apt-get clean
 RUN apt-get purge
- 
+
 # Set up permissions for X11 access.
 # Replace 1000 with your user / group id.
 RUN export uid=1000 gid=1000 && \
@@ -54,6 +58,10 @@ RUN export uid=1000 gid=1000 && \
     echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer && \
     chmod 0440 /etc/sudoers.d/developer && \
     chown ${uid}:${gid} -R /home/developer
+
+# Set up USB device debugging (device is ID in the rules files)
+ADD 51-android.rules /etc/udev/rules.d
+RUN chmod a+r /etc/udev/rules.d/51-android.rules
 
 USER developer
 ENV HOME /home/developer
