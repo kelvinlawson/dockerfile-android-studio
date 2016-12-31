@@ -1,4 +1,4 @@
-FROM ubuntu:14.10
+FROM ubuntu:16.04
 
 # Build with
 #    docker build -t kelvinlawson/android-studio .
@@ -40,7 +40,7 @@ RUN curl 'https://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-
 RUN apt-get install -y x11-apps
 
 # Install prerequisites
-RUN apt-get install -y openjdk-7-jdk lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
+RUN apt-get install -y openjdk-8-jdk lib32z1 lib32ncurses5 lib32stdc++6
 
 # Install other useful tools
 RUN apt-get install -y git vim ant
