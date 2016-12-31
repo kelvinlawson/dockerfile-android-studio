@@ -55,6 +55,7 @@ RUN useradd --create-home --home-dir $HOME developer \
 	&& chown -R developer:developer $HOME
 
 # Set up USB device debugging (device is ID in the rules files)
+RUN mkdir -p /etc/udev/rules.d
 ADD 51-android.rules /etc/udev/rules.d
 RUN chmod a+r /etc/udev/rules.d/51-android.rules
 
