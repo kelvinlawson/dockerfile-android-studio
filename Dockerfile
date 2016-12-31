@@ -49,15 +49,10 @@ RUN apt-get install -y git vim ant
 RUN apt-get clean
 RUN apt-get purge
 
-# Set up permissions for X11 access.
-# Replace 1000 with your user / group id.
-RUN export uid=1000 gid=1000 && \
-    mkdir -p /home/developer && \
-    echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
-    echo "developer:x:${uid}:" >> /etc/group && \
-    echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer && \
-    chmod 0440 /etc/sudoers.d/developer && \
-    chown ${uid}:${gid} -R /home/developer
+ENV HOME /home/developer
+RUN useradd --create-home --home-dir $HOME developer \
+	&& gpasswd -a developer developer \
+	&& chown -R developer:developer $HOME
 
 # Set up USB device debugging (device is ID in the rules files)
 ADD 51-android.rules /etc/udev/rules.d
