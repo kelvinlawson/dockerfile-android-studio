@@ -1,4 +1,4 @@
-FROM ubuntu:14.10
+FROM ubuntu:16.04
 
 # Build with
 #    docker build -t kelvinlawson/android-studio .
@@ -34,13 +34,13 @@ RUN apt-get update
 
 # Download specific Android Studio bundle (all packages).
 RUN apt-get install -y curl unzip
-RUN curl 'https://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip' > /tmp/studio.zip && unzip -d /opt /tmp/studio.zip && rm /tmp/studio.zip
+RUN curl 'https://dl.google.com/dl/android/studio/ide-zips/2.2.3.0/android-studio-ide-145.3537739-linux.zip' > /tmp/studio.zip && unzip -d /opt /tmp/studio.zip && rm /tmp/studio.zip
 
 # Install X11
 RUN apt-get install -y x11-apps
 
 # Install prerequisites
-RUN apt-get install -y openjdk-7-jdk lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
+RUN apt-get install -y openjdk-8-jdk lib32z1 lib32ncurses5 lib32stdc++6
 
 # Install other useful tools
 RUN apt-get install -y git vim ant
@@ -49,17 +49,13 @@ RUN apt-get install -y git vim ant
 RUN apt-get clean
 RUN apt-get purge
 
-# Set up permissions for X11 access.
-# Replace 1000 with your user / group id.
-RUN export uid=1000 gid=1000 && \
-    mkdir -p /home/developer && \
-    echo "developer:x:${uid}:${gid}:Developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
-    echo "developer:x:${uid}:" >> /etc/group && \
-    echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer && \
-    chmod 0440 /etc/sudoers.d/developer && \
-    chown ${uid}:${gid} -R /home/developer
+ENV HOME /home/developer
+RUN useradd --create-home --home-dir $HOME developer \
+	&& gpasswd -a developer developer \
+	&& chown -R developer:developer $HOME
 
 # Set up USB device debugging (device is ID in the rules files)
+RUN mkdir -p /etc/udev/rules.d
 ADD 51-android.rules /etc/udev/rules.d
 RUN chmod a+r /etc/udev/rules.d/51-android.rules
 
