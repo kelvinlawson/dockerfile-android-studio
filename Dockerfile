@@ -34,7 +34,7 @@ RUN apt-get update
 
 # Download specific Android Studio bundle (all packages).
 RUN apt-get install -y curl unzip
-RUN curl 'https://dl.google.com/dl/android/studio/ide-zips/1.1.0/android-studio-ide-135.1740770-linux.zip' > /tmp/studio.zip && unzip -d /opt /tmp/studio.zip && rm /tmp/studio.zip
+RUN curl 'https://dl.google.com/dl/android/studio/ide-zips/2.3.3.0/android-studio-ide-162.4069837-linux.zip' > /tmp/studio.zip && unzip -d /opt /tmp/studio.zip && rm /tmp/studio.zip
 
 # Install X11
 RUN apt-get install -y x11-apps
